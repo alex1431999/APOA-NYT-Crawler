@@ -7,3 +7,6 @@ __pycache__/
 
 # Test file
 playground.py
+
+# Secrets
+secrets/
