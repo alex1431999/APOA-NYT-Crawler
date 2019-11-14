@@ -16,3 +16,6 @@ logs/
 
 # Scripts
 *.sh
+
+# Env
+.vscode
