@@ -11,5 +11,8 @@ playground.py
 # Secrets
 secrets/
 
+# Logs
+logs/
+
 # Scripts
 *.sh
