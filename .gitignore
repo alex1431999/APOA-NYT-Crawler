@@ -1,0 +1,9 @@
+# Virtual environemt
+venv/
+
+# Python specific
+__pycache__/
+*.pyc
+
+# Test file
+playground.py
