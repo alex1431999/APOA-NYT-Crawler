@@ -12,7 +12,7 @@ playground.py
 secrets/
 
 # Logs
-logs/
+log_*.txt
 
 # Scripts
 *.sh
