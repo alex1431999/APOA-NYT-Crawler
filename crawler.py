@@ -9,7 +9,6 @@ import math
 import time
 import requests
 
-from common.utils.read_json import read_json
 from common.utils.logging import DEFAULT_LOGGER, LogTypes
 
 class NytCrawler():
@@ -25,10 +24,8 @@ class NytCrawler():
         Set up credentials
         """
         # Credentials
-        credentials_path = os.environ['NYT_APPLICATION_CREDENTIALS']
-        credentials = read_json(credentials_path)
-        self.api_key = credentials['api_key']
-        self.api_secret = credentials['api_secret']
+        self.api_key = os.environ['NYT_API_KEY']
+        self.api_secret = os.environ['NYT_API_SECRET']
 
         # Basic URLs
         self.url_root = 'https://api.nytimes.com/svc/'
