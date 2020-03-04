@@ -1,3 +1,4 @@
+celery==4.4.0
 pymongo==3.9.0
 requests==2.22.0
 git+ssh://git@gitlab.com/alex1431999/final-year-project-common.git

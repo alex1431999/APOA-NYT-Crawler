@@ -80,36 +80,35 @@ class NytCrawler():
         response = self.__send_continous(lambda: requests.get(url).json()) # Send a continous request
         return response
 
-    def __response_doc_to_nyt_dict(self, keyword_string, language, response_doc):
+    def __response_doc_to_nyt_dict(self, keyword, response_doc):
         """
         Casts an API response to a list of nyt result objects
 
-        :param str keyword: The target keyword used for the request
-        :param str language: The target language
+        :param Keyword keyword: The target keyword used for the request
         :param dict response_doc: The API response document
         """
         try: # Try to get the required information
             article_id = response_doc['_id'].split('/')[-1] # id format = nyt://article/84e7a531-986a-5293-b7a7-c343466738a0 and we just want the part after the last "/"
             text = response_doc['snippet']
+            timestamp = response_doc['pub_date'].split('+')[0] # pub_date format = 2020-03-03T17:43:00+0000 and we just want the part before the +
         except: # The response doc doen't have the required information
             return None # Abort
         
         if text is not '': # If there is a snippet
             return { 
-                'article_id': article_id, 
-                'keyword_string': keyword_string, 
-                'language': language, 
-                'text': text 
+                'article_id': article_id,
+                'keyword_id': keyword._id,
+                'text': text,
+                'timestamp': timestamp,
             }
         else:
             return None # Abort
 
-    def get_articles(self, keyword_string, language, limit=sys.maxsize):
+    def get_articles(self, keyword, limit=sys.maxsize):
         """
         Get articles from the NYT API
 
-        :param str keyword: The target keyword used for the request
-        :param str language: The target language
+        :param Keyword keyword: The target keyword used for the request
         :param int limit: The maximum amount of articles returned
         """
         articles_per_request = 10 # NYT returns 10 articles at a time
@@ -118,13 +117,13 @@ class NytCrawler():
 
         articles = []
         for i in range(amount_requests):
-            response = self.__send_article_search_request(keyword_string, i) # Send search article request
+            response = self.__send_article_search_request(keyword.keyword_string, i) # Send search article request
 
             if (not response): # If you didn't get a valid response
                 break # Abort
 
             articles_current = response['response']['docs'] # Extract the articles from the response
-            articles_casted = [self.__response_doc_to_nyt_dict(keyword_string, language, response_doc) for response_doc in articles_current] # Cast the dicts to Nyt Results
+            articles_casted = [self.__response_doc_to_nyt_dict(keyword, response_doc) for response_doc in articles_current] # Cast the dicts to Nyt Results
             articles += articles_casted # Add casted articles to the articles list
 
         return articles[:limit] # Articles come in chunks of 10 so make sure you cut off extra articles
